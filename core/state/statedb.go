@@ -235,6 +235,22 @@ func (s *StateDB) Logs() []*types.Log {
 	return logs
 }
 
+func (s *StateDB) GetPolyMachine(n uint, program common.Address) ([]byte, error) {
+	panic("unimplemented")
+}
+
+func (s *StateDB) AddPolyMachine(n uint, program common.Address, output []byte) {
+	panic("unimplemented")
+}
+
+func (s *StateDB) RecordProgram(program common.Address) {
+	panic("unimplemented")
+}
+
+func (s *StateDB) RecordedPrograms() [][]byte {
+	panic("unimplemented")
+}
+
 // AddPreimage records a SHA3 preimage seen by the VM.
 func (s *StateDB) AddPreimage(hash common.Hash, preimage []byte) {
 	if _, ok := s.preimages[hash]; !ok {
@@ -637,8 +653,8 @@ func (s *StateDB) createObject(addr common.Address) (newobj, prev *stateObject) 
 // CreateAccount is called during the EVM CREATE operation. The situation might arise that
 // a contract does the following:
 //
-//   1. sends funds to sha(account ++ (nonce + 1))
-//   2. tx_create(sha(account ++ nonce)) (note that this gets the address of 1)
+//  1. sends funds to sha(account ++ (nonce + 1))
+//  2. tx_create(sha(account ++ nonce)) (note that this gets the address of 1)
 //
 // Carrying over the balance ensures that Ether doesn't disappear.
 func (s *StateDB) CreateAccount(addr common.Address) {

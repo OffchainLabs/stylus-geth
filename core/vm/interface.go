@@ -77,6 +77,10 @@ type StateDB interface {
 	GetCurrentTxLogs() []*types.Log
 
 	ForEachStorage(common.Address, func(common.Hash, common.Hash) bool) error
+
+	// Polyglot methods.
+	AddPolyMachine(n uint, program common.Address, output []byte)
+	GetPolyMachine(n uint, program common.Address) ([]byte, error)
 }
 
 // CallContext provides a basic interface for the EVM calling conventions. The EVM
