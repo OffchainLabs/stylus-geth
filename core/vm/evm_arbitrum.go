@@ -19,8 +19,15 @@ package vm
 import (
 	"math/big"
 
+	"errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+)
+
+var (
+	polyglotEOFMagic         = byte(0xEF)
+	polyglotEOFVersion       = byte(0x00)
+	polyglotEOFSectionHeader = byte(0x00)
 )
 
 // Depth returns the current depth
@@ -93,3 +100,21 @@ func (p DefaultTxProcessor) GasPriceOp(evm *EVM) *big.Int {
 }
 
 func (p DefaultTxProcessor) FillReceiptInfo(*types.Receipt) {}
+
+// Is PolyglotProgram checks if a specified bytecode is a user-submitted WASM program.
+// Polyglot differentiates WASMs from EVM bytecode via the prefix 0xEF0000 which will safely fail
+// to pass through EVM-bytecode EOF validation rules.
+func IsPolyglotProgram(b []byte) bool {
+	if len(b) < 3 {
+		return false
+	}
+	return b[0] == polyglotEOFMagic && b[1] == polyglotEOFVersion && b[2] == polyglotEOFSectionHeader
+}
+
+// StripPolyglotPrefix if the specified input is a polyglot program.
+func StripPolyglotPrefix(b []byte) ([]byte, error) {
+	if !IsPolyglotProgram(b) {
+		return nil, errors.New("specified bytecode is not a Polyglot program")
+	}
+	return b[3:], nil
+}
