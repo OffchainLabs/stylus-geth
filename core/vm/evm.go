@@ -499,7 +499,7 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 	if err == nil && len(ret) >= 1 && ret[0] == 0xEF && evm.chainRules.IsLondon {
 		// We do not reject polyglot programs and instead store them in the DB
 		// alongside normal EVM bytecode.
-		if !IsPolyglotProgram(ret) {
+		if evm.chainRules.IsArbitrum && !IsPolyglotProgram(ret) {
 			err = ErrInvalidCode
 		}
 	}
