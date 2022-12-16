@@ -25,6 +25,13 @@ import (
 )
 
 var (
+	// Defines prefix bytes for Polyglot WASM program bytecode
+	// when deployed on-chain via a user-initiated transaction.
+	// These byte prefixes are meant to conflict with the L1 contract EOF
+	// validation rules so they can be sufficiently differentiated from EVM bytecode.
+	// This allows us to store WASM programs as code in the stateDB side-by-side
+	// with EVM contracts, but match against these prefix bytes when loading code
+	// to execute the WASMs through Polyglot rather than the EVM.
 	polyglotEOFMagic         = byte(0xEF)
 	polyglotEOFVersion       = byte(0x00)
 	polyglotEOFSectionHeader = byte(0x00)
