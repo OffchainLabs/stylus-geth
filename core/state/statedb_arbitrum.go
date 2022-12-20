@@ -22,6 +22,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/core/vm"
 )
 
 func (s *StateDB) GetCurrentTxLogs() []*types.Log {
@@ -43,7 +44,12 @@ func (s *StateDB) RecordedPrograms() [][]byte {
 	programs := [][]byte{}
 	if s.programs != nil {
 		for _, program := range s.programs {
-			programs = append(programs, s.GetCode(program))
+			wasmRaw := s.GetCode(program)
+			wasmProgram, err := vm.StripPolyglotPrefix(wasmRaw)
+			if err != nil {
+				panic(err)
+			}
+			programs = append(programs, wasmProgram)
 		}
 	}
 	return programs

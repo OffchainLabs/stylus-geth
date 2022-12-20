@@ -21,11 +21,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/holiman/uint256"
-
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/holiman/uint256"
+	"strings"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already
@@ -181,8 +182,26 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	if value.Sign() != 0 && !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
 		return nil, gas, ErrInsufficientBalance
 	}
+
+	code := evm.StateDB.GetCode(addr)
+	if IsPolyglotProgram(code) {
+		def := `[{"inputs":[{"name":"","type":"address"}, {"name":"", "type":"bytes"}],"name":"callProgram","outputs":[{"name":"status","type":"uint32"}, {"name": "result", "type":"bytes"}],"type":"function"}]`
+		abi, err := abi.JSON(strings.NewReader(def))
+		if err != nil {
+			panic(err)
+		}
+		packed, err := abi.Pack("callProgram", addr, input)
+		if err != nil {
+			panic(err)
+		}
+		arbWasmPrecompile := common.HexToAddress("0xa0")
+		input = packed
+		addr = arbWasmPrecompile
+	}
+
 	snapshot := evm.StateDB.Snapshot()
 	p, isPrecompile := evm.precompile(addr)
+
 	if !evm.StateDB.Exist(addr) {
 		if !isPrecompile && evm.chainRules.IsEIP158 && value.Sign() == 0 {
 			// Calling a non existing account, don't do anything, but ping the tracer
