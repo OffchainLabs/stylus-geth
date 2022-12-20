@@ -279,6 +279,10 @@ func (a *APIBackend) ChainDb() ethdb.Database {
 	return a.b.chainDb
 }
 
+func (a *APIBackend) ArbDb() ethdb.Database {
+	return a.b.arbDb
+}
+
 func (a *APIBackend) AccountManager() *accounts.Manager {
 	return a.b.stack.AccountManager()
 }

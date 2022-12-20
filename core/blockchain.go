@@ -172,7 +172,7 @@ type BlockChain struct {
 	chainConfig *params.ChainConfig // Chain & network configuration
 	cacheConfig *CacheConfig        // Cache configuration for pruning
 
-	arbDB  ethdb.Database // Non-consensus database for Arbitrum
+	ArbDb  ethdb.Database // Non-consensus database for Arbitrum
 	db     ethdb.Database // Low level persistent database to store final content in
 	snaps  *snapshot.Tree // Snapshot tree for fast trie leaf access
 	triegc *prque.Prque   // Priority queue mapping block numbers to tries to gc
@@ -240,7 +240,7 @@ func NewArbitrumBlockChain(db ethdb.Database, arbDB ethdb.Database, cacheConfig 
 	if err != nil {
 		return nil, err
 	}
-	bc.arbDB = arbDB
+	bc.ArbDb = arbDB
 	return bc, nil
 }
 

@@ -18,8 +18,6 @@
 package state
 
 import (
-	"errors"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
@@ -53,19 +51,4 @@ func (s *StateDB) RecordedPrograms() [][]byte {
 		}
 	}
 	return programs
-}
-
-// TODO: move to ArbDB
-var machines = make(map[common.Address][]byte)
-
-func (s *StateDB) AddPolyMachine(version uint64, program common.Address, source []byte) {
-	machines[program] = source
-}
-
-func (s *StateDB) GetPolyMachine(version uint64, program common.Address) ([]byte, error) {
-	machine, ok := machines[program]
-	if !ok {
-		return nil, errors.New("no program for given address")
-	}
-	return machine, nil
 }
