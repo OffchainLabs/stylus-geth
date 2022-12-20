@@ -183,20 +183,22 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 		return nil, gas, ErrInsufficientBalance
 	}
 
-	code := evm.StateDB.GetCode(addr)
-	if IsPolyglotProgram(code) {
-		def := `[{"inputs":[{"name":"","type":"address"}, {"name":"", "type":"bytes"}],"name":"callProgram","outputs":[{"name":"status","type":"uint32"}, {"name": "result", "type":"bytes"}],"type":"function"}]`
-		abi, err := abi.JSON(strings.NewReader(def))
-		if err != nil {
-			panic(err)
+	if evm.chainRules.IsArbitrum {
+		code := evm.StateDB.GetCode(addr)
+		if IsPolyglotProgram(code) {
+			def := `[{"inputs":[{"name":"","type":"address"}, {"name":"", "type":"bytes"}],"name":"callProgram","outputs":[{"name":"status","type":"uint32"}, {"name": "result", "type":"bytes"}],"type":"function"}]`
+			abi, err := abi.JSON(strings.NewReader(def))
+			if err != nil {
+				panic(err)
+			}
+			packed, err := abi.Pack("callProgram", addr, input)
+			if err != nil {
+				panic(err)
+			}
+			arbWasmPrecompile := common.HexToAddress("0xa0")
+			input = packed
+			addr = arbWasmPrecompile
 		}
-		packed, err := abi.Pack("callProgram", addr, input)
-		if err != nil {
-			panic(err)
-		}
-		arbWasmPrecompile := common.HexToAddress("0xa0")
-		input = packed
-		addr = arbWasmPrecompile
 	}
 
 	snapshot := evm.StateDB.Snapshot()
