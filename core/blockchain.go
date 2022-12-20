@@ -172,6 +172,7 @@ type BlockChain struct {
 	chainConfig *params.ChainConfig // Chain & network configuration
 	cacheConfig *CacheConfig        // Cache configuration for pruning
 
+	arbDB  ethdb.Database // Non-consensus database for Arbitrum
 	db     ethdb.Database // Low level persistent database to store final content in
 	snaps  *snapshot.Tree // Snapshot tree for fast trie leaf access
 	triegc *prque.Prque   // Priority queue mapping block numbers to tries to gc
@@ -227,6 +228,20 @@ type BlockChain struct {
 type trieGcEntry struct {
 	Root      common.Hash
 	Timestamp uint64
+}
+
+// NewArbitrumBlockchain returns a fully initialised block chain using information
+// available in the database. It initialises the default Ethereum Validator
+// and Processor and also includes an ArbDB instance which is used for storing / accessing
+// non-consensus data for Arbitrum. This is important for providing access to storing and retrieving
+// Polyglot WASM machines when executing Polyglot precompiles.
+func NewArbitrumBlockChain(db ethdb.Database, arbDB ethdb.Database, cacheConfig *CacheConfig, chainConfig *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config, shouldPreserve func(header *types.Header) bool, txLookupLimit *uint64) (*BlockChain, error) {
+	bc, err := NewBlockChain(db, cacheConfig, chainConfig, engine, vmConfig, shouldPreserve, txLookupLimit)
+	if err != nil {
+		return nil, err
+	}
+	bc.arbDB = arbDB
+	return bc, nil
 }
 
 // NewBlockChain returns a fully initialised block chain using information

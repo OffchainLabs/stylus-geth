@@ -22,6 +22,7 @@ import (
 	"errors"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethdb"
 )
 
 var (
@@ -48,6 +49,20 @@ func (evm *EVM) IncrementDepth() {
 
 func (evm *EVM) DecrementDepth() {
 	evm.depth -= 1
+}
+
+func (evm *EVM) AddArbDB(arbDB ethdb.Database) {
+	if !evm.chainRules.IsArbitrum {
+		return
+	}
+	evm.arbDB = arbDB
+}
+
+func (evm *EVM) ArbDB() (ethdb.Database, error) {
+	if !evm.chainRules.IsArbitrum {
+		return nil, errors.New("must be using Arbitrum EVM chain rules to fetch ArbDB from the EVM")
+	}
+	return evm.arbDB, nil
 }
 
 type TxProcessingHook interface {
