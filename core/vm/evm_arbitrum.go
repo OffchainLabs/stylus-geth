@@ -17,11 +17,12 @@
 package vm
 
 import (
-	"math/big"
 	"errors"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethdb"
 )
 
 var (
@@ -48,6 +49,10 @@ func (evm *EVM) IncrementDepth() {
 
 func (evm *EVM) DecrementDepth() {
 	evm.depth -= 1
+}
+
+func (evm *EVM) AddArbDb(arbDb ethdb.Database) {
+	evm.ArbDb = arbDb
 }
 
 type TxProcessingHook interface {

@@ -175,6 +175,7 @@ type BlockChain struct {
 	chainConfig *params.ChainConfig // Chain & network configuration
 	cacheConfig *CacheConfig        // Cache configuration for pruning
 
+	ArbDb  ethdb.Database
 	db     ethdb.Database // Low level persistent database to store final content in
 	snaps  *snapshot.Tree // Snapshot tree for fast trie leaf access
 	triegc *prque.Prque   // Priority queue mapping block numbers to tries to gc
@@ -230,6 +231,15 @@ type BlockChain struct {
 type trieGcEntry struct {
 	Root      common.Hash
 	Timestamp uint64
+}
+
+func NewArbitrumBlockChain(db, arbDb ethdb.Database, cacheConfig *CacheConfig, chainConfig *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config, shouldPreserve func(header *types.Header) bool, txLookupLimit *uint64) (*BlockChain, error) {
+	bc, err := NewBlockChain(db, cacheConfig, chainConfig, engine, vmConfig, shouldPreserve, txLookupLimit)
+	if err != nil {
+		return nil, err
+	}
+	bc.ArbDb = arbDb
+	return bc, nil
 }
 
 // NewBlockChain returns a fully initialised block chain using information

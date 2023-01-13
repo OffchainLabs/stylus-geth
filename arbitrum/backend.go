@@ -19,6 +19,7 @@ type Backend struct {
 	apiBackend *APIBackend
 	config     *Config
 	chainDb    ethdb.Database
+	arbDb      ethdb.Database
 
 	txFeed event.Feed
 	scope  event.SubscriptionScope
@@ -33,12 +34,13 @@ type Backend struct {
 	chanNewBlock chan struct{} //create new L2 block unless empty
 }
 
-func NewBackend(stack *node.Node, config *Config, chainDb ethdb.Database, publisher ArbInterface, sync SyncProgressBackend, filterConfig filters.Config) (*Backend, *filters.FilterSystem, error) {
+func NewBackend(stack *node.Node, config *Config, chainDb, arbDb ethdb.Database, publisher ArbInterface, sync SyncProgressBackend, filterConfig filters.Config) (*Backend, *filters.FilterSystem, error) {
 	backend := &Backend{
 		arb:     publisher,
 		stack:   stack,
 		config:  config,
 		chainDb: chainDb,
+		arbDb:   arbDb,
 
 		bloomRequests: make(chan chan *bloombits.Retrieval),
 		bloomIndexer:  core.NewBloomIndexer(chainDb, config.BloomBitsBlocks, config.BloomConfirms),
@@ -65,6 +67,10 @@ func (b *Backend) APIBackend() *APIBackend {
 
 func (b *Backend) ChainDb() ethdb.Database {
 	return b.chainDb
+}
+
+func (b *Backend) ArbDb() ethdb.Database {
+	return b.arbDb
 }
 
 func (b *Backend) EnqueueL2Message(ctx context.Context, tx *types.Transaction) error {

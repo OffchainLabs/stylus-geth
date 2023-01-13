@@ -49,6 +49,7 @@ type Backend interface {
 	SuggestGasTipCap(ctx context.Context) (*big.Int, error)
 	FeeHistory(ctx context.Context, blockCount int, lastBlock rpc.BlockNumber, rewardPercentiles []float64) (*big.Int, [][]*big.Int, []*big.Int, []float64, error)
 	ChainDb() ethdb.Database
+	ArbDb() ethdb.Database
 	AccountManager() *accounts.Manager
 	ExtRPCEnabled() bool
 	RPCGasCap() uint64            // global gas cap for eth_call over rpc: DoS protection

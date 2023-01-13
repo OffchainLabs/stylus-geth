@@ -137,6 +137,10 @@ func (a *APIBackend) GetArbitrumNode() interface{} {
 	return a.b.arb.ArbNode()
 }
 
+func (a *APIBackend) ArbDb() ethdb.Database {
+	return a.b.arbDb
+}
+
 // General Ethereum API
 func (a *APIBackend) SyncProgressMap() map[string]interface{} {
 	return a.sync.SyncProgressMap()
