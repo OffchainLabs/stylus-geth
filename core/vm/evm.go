@@ -197,7 +197,7 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 			if err != nil {
 				panic(err)
 			}
-			arbWasmPrecompile := common.HexToAddress("0xa0")
+			arbWasmPrecompile := common.HexToAddress("0x71")
 			input = packed
 			addr = arbWasmPrecompile
 		}
