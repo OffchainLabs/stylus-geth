@@ -24,6 +24,7 @@ import (
 // configured string.
 type table struct {
 	db     ethdb.Database
+	arbDB  ethdb.KeyValueWriter
 	prefix string
 }
 
@@ -205,6 +206,17 @@ func (t *table) NewBatchWithSize(size int) ethdb.Batch {
 // happened on the database.
 func (t *table) NewSnapshot() (ethdb.Snapshot, error) {
 	return t.db.NewSnapshot()
+}
+
+// Arbitrum: ArbDB provider setter.
+func (t *table) SetArbDB(db ethdb.KeyValueWriter) error {
+	t.arbDB = db
+	return nil
+}
+
+// Arbitrum: ArbDB provider getter.
+func (t *table) ArbDB() (ethdb.KeyValueWriter, error) {
+	return t.arbDB, nil
 }
 
 // tableBatch is a wrapper around a database batch that prefixes each key access
