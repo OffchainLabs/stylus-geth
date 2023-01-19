@@ -37,9 +37,10 @@ import (
 // freezerdb is a database wrapper that enabled freezer data retrievals.
 type freezerdb struct {
 	ancientRoot string
-	arbDB ethdb.KeyValueWriter
 	ethdb.KeyValueStore
 	ethdb.AncientStore
+	// Arbitrum: provide access to the L2 non-consensus DB.
+	arbDB ethdb.KeyValueWriter
 }
 
 // AncientDatadir returns the path of root ancient directory.
@@ -83,23 +84,10 @@ func (frdb *freezerdb) Freeze(threshold uint64) error {
 	return nil
 }
 
-// Arbitrum: ArbDB provider setter.
-func (frdb *freezerdb) SetArbDB(db ethdb.KeyValueWriter) error {
-	frdb.arbDB = db
-	return nil
-}
-
-// Arbitrum: ArbDB provider getter.
-func (frdb *freezerdb) ArbDB() (ethdb.KeyValueWriter, error) {
-    if frdb.arbDB == nil || reflect.ValueOf(frdb.arbDB).IsNil() {
-		return nil, errors.New("nil arbDB retrieved")
-    }
-	return frdb.arbDB, nil
-}
-
 // nofreezedb is a database wrapper that disables freezer data retrievals.
 type nofreezedb struct {
 	ethdb.KeyValueStore
+	// Arbitrum: provide access to the L2 non-consensus DB.
 	arbDB ethdb.KeyValueWriter
 }
 
@@ -178,20 +166,6 @@ func (db *nofreezedb) MigrateTable(kind string, convert convertLegacyFn) error {
 // AncientDatadir returns an error as we don't have a backing chain freezer.
 func (db *nofreezedb) AncientDatadir() (string, error) {
 	return "", errNotSupported
-}
-
-// Arbitrum: ArbDB provider setter.
-func (db *nofreezedb) SetArbDB(arbDB ethdb.KeyValueWriter) error {
-	db.arbDB = arbDB
-	return nil
-}
-
-// Arbitrum: ArbDB provider getter.
-func (db *nofreezedb) ArbDB() (ethdb.KeyValueWriter, error) {
-    if db.arbDB == nil || reflect.ValueOf(db.arbDB).IsNil() {
-		return nil, errors.New("nil arbDB retrieved")
-    }
-	return db.arbDB, nil
 }
 
 // NewDatabase creates a high level database on top of a given key-value data
