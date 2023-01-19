@@ -13,7 +13,7 @@ func (t *table) SetArbDB(db ethdb.KeyValueWriter) {
 
 // Arbitrum: ArbDB provider getter.
 func (t *table) ArbDB() (ethdb.KeyValueWriter, error) {
-	return loadArbDB(frdb.arbDB)
+	return loadArbDB(t.arbDB)
 }
 
 // Arbitrum: ArbDB provider setter.

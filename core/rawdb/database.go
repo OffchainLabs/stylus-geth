@@ -31,7 +31,6 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb/memorydb"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/olekukonko/tablewriter"
-	"reflect"
 )
 
 // freezerdb is a database wrapper that enabled freezer data retrievals.
