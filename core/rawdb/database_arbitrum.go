@@ -7,9 +7,8 @@ import (
 )
 
 // Arbitrum: ArbDB provider setter.
-func (t *table) SetArbDB(db ethdb.KeyValueWriter) error {
+func (t *table) SetArbDB(db ethdb.KeyValueWriter) {
 	t.arbDB = db
-	return nil
 }
 
 // Arbitrum: ArbDB provider getter.
@@ -18,9 +17,8 @@ func (t *table) ArbDB() (ethdb.KeyValueWriter, error) {
 }
 
 // Arbitrum: ArbDB provider setter.
-func (db *nofreezedb) SetArbDB(arbDB ethdb.KeyValueWriter) error {
+func (db *nofreezedb) SetArbDB(arbDB ethdb.KeyValueWriter) {
 	db.arbDB = arbDB
-	return nil
 }
 
 // Arbitrum: ArbDB provider getter.
@@ -29,9 +27,8 @@ func (db *nofreezedb) ArbDB() (ethdb.KeyValueWriter, error) {
 }
 
 // Arbitrum: ArbDB provider setter.
-func (frdb *freezerdb) SetArbDB(db ethdb.KeyValueWriter) error {
+func (frdb *freezerdb) SetArbDB(db ethdb.KeyValueWriter) {
 	frdb.arbDB = db
-	return nil
 }
 
 // Arbitrum: ArbDB provider getter.
