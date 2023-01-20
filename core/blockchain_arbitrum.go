@@ -35,7 +35,7 @@ func NewArbitrumBlockChain(db ethdb.Database, arbDB ethdb.KeyValueWriter, cacheC
 	if err != nil {
 		return nil, err
 	}
-	bc.arbDB = arbDB
+	bc.stateCache.SetArbDB(arbDB)
 	return bc, nil
 }
 

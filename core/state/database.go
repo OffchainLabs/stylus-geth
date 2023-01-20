@@ -40,6 +40,12 @@ const (
 
 // Database wraps access to tries and contract code.
 type Database interface {
+	// Arbitrum: Provides access to the L2, non-consensus database.
+	ArbDB() (ethdb.KeyValueWriter, error)
+
+	// Arbitrum: Sets the L2, non-consensus database.
+	SetArbDB(kv ethdb.KeyValueWriter)
+
 	// OpenTrie opens the main account trie.
 	OpenTrie(root common.Hash) (Trie, error)
 
@@ -139,6 +145,8 @@ func NewDatabaseWithConfig(db ethdb.Database, config *trie.Config) Database {
 }
 
 type cachingDB struct {
+	// Arbitrum: L2 non-consensus db.
+	arbDB         ethdb.KeyValueWriter
 	db            *trie.Database
 	codeSizeCache *lru.Cache
 	codeCache     *fastcache.Cache

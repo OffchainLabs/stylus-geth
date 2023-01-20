@@ -225,9 +225,6 @@ type BlockChain struct {
 	processor  Processor // Block transaction processor interface
 	forker     *ForkChoice
 	vmConfig   vm.Config
-
-	// Arbitrum: Add non-consensus DB.
-	arbDB ethdb.KeyValueWriter
 }
 
 type trieGcEntry struct {
