@@ -25,8 +25,6 @@ import (
 type table struct {
 	db     ethdb.Database
 	prefix string
-	// Arbitrum: provide access to the L2 non-consensus DB.
-	arbDB  ethdb.KeyValueWriter
 }
 
 // NewTable returns a database object that prefixes all keys with a given string.

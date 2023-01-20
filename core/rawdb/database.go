@@ -38,8 +38,6 @@ type freezerdb struct {
 	ancientRoot string
 	ethdb.KeyValueStore
 	ethdb.AncientStore
-	// Arbitrum: provide access to the L2 non-consensus DB.
-	arbDB ethdb.KeyValueWriter
 }
 
 // AncientDatadir returns the path of root ancient directory.
@@ -86,8 +84,6 @@ func (frdb *freezerdb) Freeze(threshold uint64) error {
 // nofreezedb is a database wrapper that disables freezer data retrievals.
 type nofreezedb struct {
 	ethdb.KeyValueStore
-	// Arbitrum: provide access to the L2 non-consensus DB.
-	arbDB ethdb.KeyValueWriter
 }
 
 // HasAncient returns an error as we don't have a backing chain freezer.

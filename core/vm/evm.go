@@ -25,6 +25,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/params"
 )
 
@@ -106,6 +107,8 @@ type EVM struct {
 	TxContext
 	// StateDB gives access to the underlying state
 	StateDB StateDB
+	// Arbitrum: Adds non-consensus db.
+	ArbDB ethdb.KeyValueWriter
 	// Depth is the current call stack
 	depth int
 

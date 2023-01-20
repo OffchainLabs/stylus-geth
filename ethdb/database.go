@@ -187,6 +187,5 @@ type Database interface {
 	Stater
 	Compacter
 	Snapshotter
-	ArbDBProvider
 	io.Closer
 }
