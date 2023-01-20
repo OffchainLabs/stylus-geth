@@ -20,6 +20,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
@@ -30,6 +31,7 @@ type StateDB interface {
 	GetUserModule(uint32, common.Address) ([]byte, error)
 	NoncanonicalProgramHash(common.Address, uint32) common.Hash
 	Deterministic() bool
+	Database() state.Database
 
 	CreateAccount(common.Address)
 
