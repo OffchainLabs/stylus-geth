@@ -2,10 +2,14 @@ package state
 
 import (
 	"errors"
+	"strings"
 
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 )
+
+var ErrNotFound = errors.New("not found")
 
 // CompiledWasmContractCode retrieves a particular contract's compiled wasm code.
 func (db *cachingDB) CompiledWasmContractCode(version uint32, codeHash common.Hash) ([]byte, error) {
@@ -15,11 +19,14 @@ func (db *cachingDB) CompiledWasmContractCode(version uint32, codeHash common.Ha
 	}
 	code, err := db.db.DiskDB().Get(wasmKey)
 	if err != nil {
+		if strings.Contains("not found", err.Error()) {
+			return nil, ErrNotFound
+		}
 		return nil, err
 	}
 	if len(code) > 0 {
 		db.compiledWasmCache.Set(wasmKey, code)
 		return code, nil
 	}
-	return nil, errors.New("not found")
+	return nil, ErrNotFound
 }

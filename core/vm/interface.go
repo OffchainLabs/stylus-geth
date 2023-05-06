@@ -29,6 +29,7 @@ type StateDB interface {
 	// Arbitrum: manage compiled wasms
 	GetCompiledWasmCode(addr common.Address, version uint32) []byte
 	SetCompiledWasmCode(addr common.Address, code []byte, version uint32)
+	CompiledWasmContractCode(version uint32, codeHash common.Hash) ([]byte, error)
 
 	NoncanonicalProgramHash(common.Address, uint32) common.Hash
 	Deterministic() bool

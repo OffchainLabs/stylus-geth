@@ -63,6 +63,10 @@ func StripStylusPrefix(b []byte) ([]byte, error) {
 	return b[4:], nil
 }
 
+func (s *StateDB) CompiledWasmContractCode(version uint32, codeHash common.Hash) ([]byte, error) {
+	return s.db.CompiledWasmContractCode(version, codeHash)
+}
+
 func (s *StateDB) GetCompiledWasmCode(addr common.Address, version uint32) []byte {
 	stateObject := s.getStateObject(addr)
 	if stateObject != nil {
