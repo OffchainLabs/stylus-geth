@@ -29,6 +29,7 @@ type ArbitrumChainParams struct {
 	InitialArbOSVersion       uint64
 	InitialChainOwner         common.Address
 	GenesisBlockNum           uint64
+	StylusArbOSVersion        uint64
 }
 
 func (c *ChainConfig) IsArbitrum() bool {
@@ -39,11 +40,16 @@ func (c *ChainConfig) IsArbitrumNitro(num *big.Int) bool {
 	return c.IsArbitrum() && isBlockForked(new(big.Int).SetUint64(c.ArbitrumChainParams.GenesisBlockNum), num)
 }
 
+func (c *ChainConfig) ArbitrumStylusEnabled(arbOSVersion uint64) bool {
+	stylusArbOSVersion := c.ArbitrumChainParams.StylusArbOSVersion
+	return c.IsArbitrum() && stylusArbOSVersion != 0 && arbOSVersion >= stylusArbOSVersion
+}
+
 func (c *ChainConfig) DebugMode() bool {
 	return c.ArbitrumChainParams.AllowDebugPrecompiles
 }
 
-func (c *ChainConfig) checkArbitrumCompatible(newcfg *ChainConfig, head *big.Int) *ConfigCompatError {
+func (c *ChainConfig) checkArbitrumCompatible(newcfg *ChainConfig, _ *big.Int) *ConfigCompatError {
 	if c.IsArbitrum() != newcfg.IsArbitrum() {
 		// This difference applies to the entire chain, so report that the genesis block is where the difference appears.
 		return newBlockCompatError("isArbitrum", common.Big0, common.Big0)
@@ -55,6 +61,9 @@ func (c *ChainConfig) checkArbitrumCompatible(newcfg *ChainConfig, head *big.Int
 	newArb := &newcfg.ArbitrumChainParams
 	if cArb.GenesisBlockNum != newArb.GenesisBlockNum {
 		return newBlockCompatError("genesisblocknum", new(big.Int).SetUint64(cArb.GenesisBlockNum), new(big.Int).SetUint64(newArb.GenesisBlockNum))
+	}
+	if cArb.StylusArbOSVersion != 0 && cArb.StylusArbOSVersion != newArb.StylusArbOSVersion {
+		return newBlockCompatError("stylusArbOSVersion", nil, nil)
 	}
 	return nil
 }
@@ -106,6 +115,7 @@ func ArbitrumDevTestParams() ArbitrumChainParams {
 		DataAvailabilityCommittee: false,
 		InitialArbOSVersion:       11,
 		InitialChainOwner:         common.Address{},
+		StylusArbOSVersion:        11,
 	}
 }
 

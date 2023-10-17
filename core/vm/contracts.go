@@ -142,6 +142,10 @@ func ActivePrecompiles(rules params.Rules) []common.Address {
 	}
 }
 
+func NewArbosPrecompilesAtVersion(arbosVersion uint64) []common.Address {
+	return ArbosVersionPrecompiledAddresses[arbosVersion]
+}
+
 type AdvancedPrecompileCall struct {
 	PrecompileAddress common.Address
 	ActingAsAddress   common.Address

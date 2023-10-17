@@ -522,7 +522,7 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 		err = ErrInvalidCode
 		// Arbitrum: We do not reject Stylus programs and instead store them in the DB
 		// alongside normal EVM bytecode.
-		if evm.chainRules.IsArbitrum && state.IsStylusProgram(ret) {
+		if evm.chainConfig.ArbitrumStylusEnabled(evm.Context.ArbOSVersion) && state.IsStylusProgram(ret) {
 			err = nil
 		}
 	}
