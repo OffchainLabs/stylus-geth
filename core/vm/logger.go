@@ -32,6 +32,8 @@ type EVMLogger interface {
 	CaptureArbitrumTransfer(env *EVM, from, to *common.Address, value *big.Int, before bool, purpose string)
 	CaptureArbitrumStorageGet(key common.Hash, depth int, before bool)
 	CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool)
+	CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool)
+	CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool)
 
 	// Stylus: capture hostio invocation
 	CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64)

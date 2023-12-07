@@ -125,6 +125,18 @@ func (t *muxTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int,
 	}
 }
 
+func (t *muxTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool) {
+	for _, t := range t.tracers {
+		t.CaptureArbitrumTransientStorageGet(key, depth, before)
+	}
+}
+
+func (t *muxTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+	for _, t := range t.tracers {
+		t.CaptureArbitrumTransientStorageSet(key, value, depth, before)
+	}
+}
+
 func (t *muxTracer) CaptureArbitrumTransfer(env *vm.EVM, from, to *common.Address, value *big.Int, before bool, purpose string) {
 	for _, t := range t.tracers {
 		t.CaptureArbitrumTransfer(env, from, to, value, before, purpose)

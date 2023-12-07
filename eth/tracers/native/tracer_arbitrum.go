@@ -90,6 +90,23 @@ func (*noopTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, 
 func (*prestateTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {}
 func (*flatCallTracer) CaptureArbitrumStorageSet(key, value common.Hash, depth int, before bool) {}
 
+func (*callTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool)     {}
+func (*fourByteTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool) {}
+func (*noopTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool)     {}
+func (*prestateTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool) {}
+func (*flatCallTracer) CaptureArbitrumTransientStorageGet(key common.Hash, depth int, before bool) {}
+
+func (*callTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+}
+func (*fourByteTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+}
+func (*noopTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+}
+func (*prestateTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+}
+func (*flatCallTracer) CaptureArbitrumTransientStorageSet(key, value common.Hash, depth int, before bool) {
+}
+
 func (*callTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64)     {}
 func (*fourByteTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64) {}
 func (*noopTracer) CaptureStylusHostio(name string, args, outs []byte, startInk, endInk uint64)     {}
